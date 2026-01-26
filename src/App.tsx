@@ -57,23 +57,26 @@ export const App = () => {
                 )}
                 {selectedUser && isPostLoading && <Loader />}
                 {selectedUser && !isPostLoading && hasPostLoadingError && (
-                  <div 
-                  className="notification is-danger"
-                   data-cy="PostLoadingError">
+                  <div
+                    className="notification is-danger"
+                    data-cy="PostLoadingError"
+                  >
                     Something went wrong!
                   </div>
                 )}
                 {canShowPostDetails && posts.length === 0 && (
-                  <div 
-                  className="notification is-warning"
-                  data-cy="NoPostsYet">
-                    No posts yet</div>
+                  <div className="notification is-warning" data-cy="NoPostsYet">
+                    No posts yet
+                  </div>
                 )}
                 {hasPostLoadingError && (
-      <p data-cy="PostsLoadingError" className="notification is-danger">
-        Unable to load posts
-      </p>
-    )}
+                  <p
+                    data-cy="PostsLoadingError"
+                    className="notification is-danger"
+                  >
+                    Unable to load posts
+                  </p>
+                )}
 
                 {canShowPostDetails && posts.length > 0 && (
                   <PostsList

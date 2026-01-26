@@ -39,12 +39,11 @@ export const PostDetails: React.FC<Props> = ({ post }) => {
 
   const addComment = (newComment: Comment) => {
     setComments(prevComments => [...prevComments, newComment]);
-    setIsFormVisible(false);
+  
   };
 
   const deleteComment = (commentId: number) => {
     const originalComments = [...comments];
-
     setComments(prevComments => prevComments.filter(c => c.id !== commentId));
     setCommentDeleteError(false);
 

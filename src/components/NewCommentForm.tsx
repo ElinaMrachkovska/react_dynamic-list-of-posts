@@ -17,16 +17,20 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onAdd }) => {
   });
   const [onSubmit, setOnSubmit] = useState(false);
   const [hasError, setHasError] = useState(false);
-   const handleClear = () => {
+
+  const handleClear = (keepAuthor = false) => {
+    if (keepAuthor) {
+      setFields(prev => ({ ...prev, body: '' }));
+    } else {
       setFields({ name: '', email: '', body: '' });
-      setErrors({ name: false, email: false, body: false });
-      setHasError(false);
-    };
+    }
+    setErrors({ name: false, email: false, body: false });
+    setHasError(false);
+  };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // setHasError(false);
-    
+    setHasError(false);
 
     const { name, email, body } = fields;
 
@@ -36,6 +40,7 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onAdd }) => {
         email: !email.trim(),
         body: !body.trim(),
       });
+
       return;
     }
 
@@ -53,7 +58,7 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onAdd }) => {
       .post<Comment>(`/comments`, newComment)
       .then(res => {
         onAdd(res);
-        handleClear();
+        handleClear(true);
       })
       .catch(() => {
         setHasError(true);
@@ -85,7 +90,7 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onAdd }) => {
     <form
       data-cy="NewCommentForm"
       onSubmit={handleSubmit}
-      onReset={handleClear}
+      onReset={() => handleClear()}
     >
       <div className="field" data-cy="NameField">
         <label className="label" htmlFor="comment-author-name">
@@ -187,7 +192,7 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onAdd }) => {
         )}
       </div>
 
-{hasError && (
+      {hasError && (
         <div className="notification is-danger" data-cy="CommentAddError">
           Unable to add a comment
         </div>
@@ -197,10 +202,7 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onAdd }) => {
         <div className="control">
           <button
             type="submit"
-          
-            className={
-              classNames('button is-link', { 'is-loading': onSubmit })
-            }
+            className={classNames('button is-link', { 'is-loading': onSubmit })}
           >
             Add
           </button>

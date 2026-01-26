@@ -45,9 +45,8 @@ export const PostsList: React.FC<Props> = ({
                     'is-light': !isSelected,
                   })}
                   onClick={() => onSelectPost?.(isSelected ? null : post)}
-                  
                 >
-                 {isSelected ? 'Close' : 'Open'}
+                  {isSelected ? 'Close' : 'Open'}
                 </button>
               </td>
             </tr>
