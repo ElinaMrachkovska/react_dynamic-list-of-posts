@@ -10,20 +10,31 @@ interface Props {
 
 export const NewCommentForm: React.FC<Props> = ({ postId, onAdd }) => {
   const [fields, setFields] = useState({ name: '', email: '', body: '' });
-  const [errors, setErrors] = useState({ name: false, email: false, body: false });
+  const [errors, setErrors] = useState({
+    name: false,
+    email: false,
+    body: false,
+  });
   const [onSubmit, setOnSubmit] = useState(false);
   const [hasError, setHasError] = useState(false);
+   const handleClear = () => {
+      setFields({ name: '', email: '', body: '' });
+      setErrors({ name: false, email: false, body: false });
+      setHasError(false);
+    };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    // setHasError(false);
+    
 
     const { name, email, body } = fields;
 
-    if (!name || !email || !body) {
+    if (!name.trim() || !email.trim() || !body.trim()) {
       setErrors({
-        name: !name,
-        email: !email,
-        body: !body,
+        name: !name.trim(),
+        email: !email.trim(),
+        body: !body.trim(),
       });
       return;
     }
@@ -31,17 +42,17 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onAdd }) => {
     setOnSubmit(true);
 
     const newComment = {
-      email,
       name,
+      email,
       body,
       postId,
     };
 
+
     client
-      .post(`/posts/${postId}/comments`, newComment)
-      .then((response) => {
-        const res = response as { data: Comment };
-        onAdd(res.data);
+      .post<Comment>(`/comments`, newComment)
+      .then(res => {
+        onAdd(res);
         handleClear();
       })
       .catch(() => {
@@ -53,33 +64,29 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onAdd }) => {
   };
 
   const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFields((prev) => ({ ...prev, name: event.target.value }));
+    setFields(prev => ({ ...prev, name: event.target.value }));
     setHasError(false);
-    setErrors((prev) => ({ ...prev, name: false }));
+    setErrors(prev => ({ ...prev, name: false }));
   };
 
   const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFields((prev) => ({ ...prev, email: event.target.value }));
+    setFields(prev => ({ ...prev, email: event.target.value }));
     setHasError(false);
-    setErrors((prev) => ({ ...prev, email: false }));
+    setErrors(prev => ({ ...prev, email: false }));
   };
 
   const handleChangeBody = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setFields((prev) => ({ ...prev, body: event.target.value }));
+    setFields(prev => ({ ...prev, body: event.target.value }));
     setHasError(false);
-    setErrors((prev) => ({ ...prev, body: false }));
-  };
-
-  const handleClear = () => {
-    setFields({ name: '', email: '', body: '' });
-    setErrors({ name: false, email: false, body: false });
-    setHasError(false);
+    setErrors(prev => ({ ...prev, body: false }));
   };
 
   return (
-    <form data-cy="NewCommentForm"
-     onSubmit={handleSubmit} 
-     onReset={handleClear}>
+    <form
+      data-cy="NewCommentForm"
+      onSubmit={handleSubmit}
+      onReset={handleClear}
+    >
       <div className="field" data-cy="NameField">
         <label className="label" htmlFor="comment-author-name">
           Author Name
@@ -180,9 +187,9 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onAdd }) => {
         )}
       </div>
 
-      {hasError && (
-        <div className="notification is-danger is-light">
-          <p data-cy="ErrorMessage">Something went wrong</p>
+{hasError && (
+        <div className="notification is-danger" data-cy="CommentAddError">
+          Unable to add a comment
         </div>
       )}
 
@@ -190,14 +197,21 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onAdd }) => {
         <div className="control">
           <button
             type="submit"
-            className={classNames('button is-link', { 'is-loading': onSubmit })}
+          
+            className={
+              classNames('button is-link', { 'is-loading': onSubmit })
+            }
           >
             Add
           </button>
         </div>
 
         <div className="control">
-          <button type="reset" className="button is-link is-light" disabled={onSubmit}>
+          <button
+            type="reset"
+            className="button is-link is-light"
+            disabled={onSubmit}
+          >
             Clear
           </button>
         </div>

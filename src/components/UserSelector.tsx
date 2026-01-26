@@ -1,21 +1,20 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import classNames from 'classnames';
-import {client} from '../utils/fetchClient';
+import { client } from '../utils/fetchClient';
 import { User } from '../types/User';
-import {Loader} from './Loader/Loader';
+import { Loader } from './Loader/Loader';
 
-interface Props  {
+interface Props {
   user: User | null;
   onSelect: (user: User) => void;
 }
 
-export const UserSelector: React.FC<Props> = ({user, onSelect}) => {
+export const UserSelector: React.FC<Props> = ({ user, onSelect }) => {
   const [users, setUsers] = useState<User[]>([]);
   const [isOpened, setIsOpened] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
-
 
   useEffect(() => {
     setIsLoading(true);
@@ -31,9 +30,11 @@ export const UserSelector: React.FC<Props> = ({user, onSelect}) => {
   }, []);
 
   return (
-    <div data-cy="UserSelector" className={classNames(
-      "dropdown", { 'is-active': isOpened })} 
-      onBlur={() => setIsOpened(false)}>
+    <div
+      data-cy="UserSelector"
+      className={classNames('dropdown', { 'is-active': isOpened })}
+      onBlur={() => setIsOpened(false)}
+    >
       <div className="dropdown-trigger">
         <button
           type="button"
@@ -41,7 +42,6 @@ export const UserSelector: React.FC<Props> = ({user, onSelect}) => {
           aria-haspopup="true"
           aria-controls="dropdown-menu"
           onClick={() => setIsOpened(prev => !prev)}
-
         >
           <span>{user ? user.name : 'Choose a user'}</span>
 
@@ -57,37 +57,36 @@ export const UserSelector: React.FC<Props> = ({user, onSelect}) => {
             <Loader />
           </div>
         )}
-      
 
-      {hasError && (
-        <div className="dropdown-content">
-          <div className="dropdown-item has-text-danger">
-            Something went wrong...
+        {hasError && (
+          <div className="dropdown-content">
+            <div className="dropdown-item has-text-danger">
+              Something went wrong...
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {!isLoading && !hasError && (
-        <div className="dropdown-content">
-          {users.map(usr => (
-   
-<a
-  key={usr.id}
-  href={`#user${usr.id}`}
-  className={classNames("dropdown-item", {
-    "is-active": user?.id === usr.id
-  })}
-  onMouseDown={(event) => {
-    event.preventDefault(); 
-    onSelect(usr);
-    setIsOpened(false);
-  }}
->
-  {usr.name}
-</a>
-          ))}
-        </div>
-      )}
+        {!isLoading && !hasError && (
+          <div className="dropdown-content">
+            {users.map(usr => (
+              <a
+                key={usr.id}
+                href={`#user${usr.id}`}
+                className={classNames('dropdown-item', {
+                  'is-active': user?.id === usr.id,
+                })}
+                onMouseDown={event => {
+                  event.preventDefault();
+                  onSelect(usr);
+                  setIsOpened(false);
+                }}
+              >
+                {usr.name}
+              </a>
+            ))}
+          </div>
+        )}
       </div>
-      </div>
-  )}
+    </div>
+  );
+};
