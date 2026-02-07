@@ -39,11 +39,11 @@ export const PostDetails: React.FC<Props> = ({ post }) => {
 
   const addComment = (newComment: Comment) => {
     setComments(prevComments => [...prevComments, newComment]);
-  
   };
 
   const deleteComment = (commentId: number) => {
     const originalComments = [...comments];
+
     setComments(prevComments => prevComments.filter(c => c.id !== commentId));
     setCommentDeleteError(false);
 

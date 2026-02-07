@@ -17,13 +17,13 @@ export const App = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
-  const [isPostLoading, setIsPostLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [hasPostLoadingError, setHasPostLoadingError] = useState(false);
 
   const handleUserSelect = (user: User) => {
     setPosts([]);
     setSelectedUser(user);
-    setIsPostLoading(true);
+    setIsLoading(true);
     setSelectedPost(null);
     setHasPostLoadingError(false);
 
@@ -34,12 +34,11 @@ export const App = () => {
         setHasPostLoadingError(true);
       })
       .finally(() => {
-        setIsPostLoading(false);
+        setIsLoading(false);
       });
   };
 
-  const canShowPostDetails =
-    selectedUser && !isPostLoading && !hasPostLoadingError;
+  const canShowPostDetails = selectedUser && !isLoading && !hasPostLoadingError;
 
   return (
     <main className="section">
@@ -55,8 +54,10 @@ export const App = () => {
                 {!selectedUser && (
                   <p data-cy="NoSelectedUser">No user selected</p>
                 )}
-                {selectedUser && isPostLoading && <Loader />}
-                {selectedUser && !isPostLoading && hasPostLoadingError && (
+                {isLoading && <div className="loading">Завантаження...</div>}
+
+                {selectedUser && isLoading && <Loader />}
+                {selectedUser && !isLoading && hasPostLoadingError && (
                   <div
                     className="notification is-danger"
                     data-cy="PostLoadingError"
@@ -68,14 +69,6 @@ export const App = () => {
                   <div className="notification is-warning" data-cy="NoPostsYet">
                     No posts yet
                   </div>
-                )}
-                {hasPostLoadingError && (
-                  <p
-                    data-cy="PostsLoadingError"
-                    className="notification is-danger"
-                  >
-                    Unable to load posts
-                  </p>
                 )}
 
                 {canShowPostDetails && posts.length > 0 && (

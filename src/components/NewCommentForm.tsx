@@ -24,6 +24,7 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onAdd }) => {
     } else {
       setFields({ name: '', email: '', body: '' });
     }
+
     setErrors({ name: false, email: false, body: false });
     setHasError(false);
   };
@@ -52,7 +53,6 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onAdd }) => {
       body,
       postId,
     };
-
 
     client
       .post<Comment>(`/comments`, newComment)

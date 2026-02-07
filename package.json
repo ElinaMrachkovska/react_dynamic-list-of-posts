@@ -41,12 +41,12 @@
     "prettier": "^3.3.2",
     "sass": "^1.77.8",
     "stylelint": "^16.7.0",
-    "typescript": "^5.2.2",
+    "typescript": "^5.9.3",
     "vite": "^5.3.1"
   },
   "scripts": {
-    "start": "mate-scripts start -l",
-    "build": "mate-scripts build",
+    "start": "vite",
+    "build": "vite build",
     "test": "mate-scripts test -l",
     "style-format": "npx stylelint 'src/**/*.scss' --fix --allow-empty-input",
     "lint-js": "mate-scripts lint -j",
@@ -56,7 +56,9 @@
     "update": "mate-scripts update",
     "postinstall": "npm run update && cypress verify",
     "predeploy": "npm run build",
-    "deploy": "mate-scripts deploy"
+    "deploy": "mate-scripts deploy",
+    "dev": "vite",
+    "preview": "vite preview"
   },
   "browserslist": {
     "production": [
