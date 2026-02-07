@@ -40,8 +40,7 @@ export const App = () => {
       });
   };
 
-  const canShowPostDetails =
-    selectedUser && !isLoading && !hasPostLoadingError;
+  const canShowPostDetails = selectedUser && !isLoading && !hasPostLoadingError;
 
   return (
     <main className="section">
