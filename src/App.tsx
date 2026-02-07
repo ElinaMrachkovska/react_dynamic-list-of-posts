@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import classNames from 'classnames';
 
 import 'bulma/css/bulma.css';
@@ -8,7 +9,6 @@ import { PostsList } from './components/PostsList';
 import { PostDetails } from './components/PostDetails';
 import { UserSelector } from './components/UserSelector';
 import { Loader } from './components/Loader/Loader';
-import { useState } from 'react';
 import { User } from './types/User';
 import { Post } from './types/Post';
 import { client } from './utils/fetchClient';
@@ -21,12 +21,14 @@ export const App = () => {
   const [hasPostLoadingError, setHasPostLoadingError] = useState(false);
 
   const handleUserSelect = (user: User) => {
+    // Скидаємо попередні дані
     setPosts([]);
     setSelectedUser(user);
-    setIsLoading(true);
     setSelectedPost(null);
     setHasPostLoadingError(false);
+    setIsLoading(true);
 
+    // Завантажуємо пости користувача
     client
       .get<Post[]>(`/posts?userId=${user.id}`)
       .then(setPosts)
@@ -38,7 +40,8 @@ export const App = () => {
       });
   };
 
-  const canShowPostDetails = selectedUser && !isLoading && !hasPostLoadingError;
+  const canShowPostDetails =
+    selectedUser && !isLoading && !hasPostLoadingError;
 
   return (
     <main className="section">
@@ -54,17 +57,18 @@ export const App = () => {
                 {!selectedUser && (
                   <p data-cy="NoSelectedUser">No user selected</p>
                 )}
-                {isLoading && <div className="loading">Завантаження...</div>}
 
                 {selectedUser && isLoading && <Loader />}
-                {selectedUser && !isLoading && hasPostLoadingError && (
+
+                {hasPostLoadingError && (
                   <div
                     className="notification is-danger"
-                    data-cy="PostLoadingError"
+                    data-cy="PostsLoadingError"
                   >
                     Something went wrong!
                   </div>
                 )}
+
                 {canShowPostDetails && posts.length === 0 && (
                   <div className="notification is-warning" data-cy="NoPostsYet">
                     No posts yet
@@ -92,8 +96,8 @@ export const App = () => {
               { 'Sidebar--open': !!selectedPost },
             )}
           >
-            <div className="tile is-child box is-success ">
-              <PostDetails post={selectedPost} />
+            <div className="tile is-child box is-success">
+              {selectedPost && <PostDetails post={selectedPost} />}
             </div>
           </div>
         </div>
